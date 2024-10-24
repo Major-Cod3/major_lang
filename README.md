@@ -1,5 +1,5 @@
 ![logo](logo.png)
-#majôrlang - Hardware-Oriented Programming Language
+# majôrlang - Hardware-Oriented Programming Language
 
 **majôrlang** é uma linguagem de programação orientada a hardware projetada para fornecer controle direto e preciso sobre dispositivos e componentes físicos. Ela foi criada com o objetivo de oferecer aos desenvolvedores ferramentas de baixo nível que permitem uma interação eficiente com o hardware, utilizando recursos mínimos e garantindo desempenho otimizado.
 
