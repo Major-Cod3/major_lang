@@ -14,7 +14,8 @@ class Parser():
 		
 	def statement(self):
 		self.linha = self.tokens[self.Index][2]
-		if self.match('FLOAT') or self.match('INTEIRO') or self.match('STRING') :
+		if self.match('DYNAMICS'):
+			
 			return self.var_assign()
 		elif self.match('IF'):
 			return self.if_statement()
@@ -26,15 +27,24 @@ class Parser():
 			return self.expand_statement()
 		elif self.match('MPRINT'):
 			return self.mprint_statement()
+		elif self.match('INPUT'):
+			return self.input_statement()
 		elif self.match('RETURN'):
 			return self.return_statement()
 		elif self.match('IDENTIFIER'):
+			
 			return self.var_update()
+		elif self.match('DELETE'):
+			var = self.consume('IDENTIFIER')[1]
+			return Delete(var)
 		else:
+			print(self.tokens[self.Index])
 			self.erro(f"Invalid primary token na linha:{self.linha}")
 	def var_assign(self):
 		#  variavel
-		tipor = self.tokens[self.Index-1]
+		modelo = self.previous()
+		tipor = self.tokens[self.Index]
+		self.Index +=1
 		self.consume('COLON')
 		identifier = self.consume('IDENTIFIER')[1]
 		self.consume('ATTRIBUTION')
@@ -44,10 +54,20 @@ class Parser():
 		else:
 			self.expression()
 	def var_update(self):
+		
 		identifier = self.tokens[self.Index-1][1]
-		self.consume('ATTRIBUTION')
-		value = self.expression()
-		return VarAssign(identifier,value)
+		if self.check('ATTRIBUTION'):
+			self.consume('ATTRIBUTION')
+			value = self.expression()
+			return VarAssign(identifier,value)
+		elif self.check('LSQB'):
+			self.consume('LSQB')
+			value = self.expression()
+			self.consume('RSQB')
+			return ARRAYS_position(identifier, value)
+		elif self.match('LPAREN') and self.match('RPAREN'):
+			 	return function_call(identifier)
+		return IDENTIFIER(identifier)
 	def if_statement(self):
 		#if
 		self.consume('LPAREN')
@@ -117,7 +137,12 @@ class Parser():
 			mPrint.append(self.expression())
 		self.consume('RPAREN')
 		return MPrint(mPrint)
-	
+	def input_statement(self):
+		self.consume('LPAREN')
+		variavel = self.consume('IDENTIFIER')[1]
+		text = self.consume('STRING')[1]
+		self.consume('RPAREN')
+		return Input(variavel,text)
 	def consume(self, token_type):
 		if self.check(token_type):
 			current_token = self.tokens[self.Index]
@@ -146,7 +171,7 @@ class Parser():
 			elif self.match('DIV'):
 				operator = '/'
 			elif self.match('POW'):
-				operator = '^'
+				operator = '**'
 			else:
 				break
 			right = self.primary_expression()  # Captura a próxima expressão à direita
@@ -159,7 +184,7 @@ class Parser():
 		elif self.match('FLOAT'):
 			return Number(float(self.previous()[1]))
 		elif self.match('IDENTIFIER'):
-			return IDENTIFIER(self.previous()[1])
+			return self.var_update()
 		elif self.match('STRING'):
 			return String_str(str(self.previous()[1]))
 		elif self.match('LPAREN'):
@@ -176,7 +201,7 @@ class Parser():
 		return False
 	def check_type(self, expected_type, value):
 		if isinstance(value, Number):
-			if expected_type == 'INTEIRO' and value.is_integer():
+			if expected_type == 'INTEIRO' and value.is_integer() or expected_type == 'BIN8':
 				return True
 			elif expected_type == 'FLOAT' and value.is_float():
 				return True
@@ -184,7 +209,7 @@ class Parser():
 		      left_type = self.check_type(expected_type, value.left)
 		      right_type = self.check_type(expected_type, value.right)
 		      return left_type and right_type
-		elif isinstance(value, IDENTIFIER):
+		elif isinstance(value, IDENTIFIER) or isinstance(value, ARRAYS_position):
 			return True
 		elif expected_type == 'STRING' and isinstance(value, String_str):
 			if isinstance(value.nome, str):

@@ -43,7 +43,11 @@ class MPrint(ASTNode):
 	def __init__(self,value):
 	       super().__init__()
 	       self.value = value
-
+class Input(ASTNode):
+	def __init__(self,variavel,text):
+	       super().__init__()
+	       self.text = text
+	       self.var = variavel
 class Number:
     def __init__(self, value):
         super().__init__()
@@ -66,15 +70,15 @@ class String_str(ASTNode):
         self.nome = nome
     
     
-    #def __repr__(self):
-#        return f'str({self.nome})'  # Para fins de debug, exibe o valor
+    def __repr__(self):
+        return f'str({self.nome})'  # Para fins de debug, exibe o valor
 
 class IDENTIFIER(ASTNode):
 	def __init__(self,name):
 	       super().__init__()
 	       self.name = name
-	#def __repr__(self):
-#		return f'IDENTIFIER({self.name})'  # Para fins de debug, exibe o valor
+	def __repr__(self):
+		return f'IDENTIFIER({self.name})'  # Para fins de debug, exibe o valor
 
 class BinaryOperation(ASTNode):
     def __init__(self, left, operator, right):
@@ -84,3 +88,27 @@ class BinaryOperation(ASTNode):
         self.right = right
     def __repr__(self):
         return f"({self.left} {self.operator} {self.right})"  # Para fins de debug, exibe o valor
+       
+class function_call(ASTNode):
+    def __init__(self, nome):
+        super().__init__()
+        self.nome = nome
+    
+    
+    def __repr__(self):
+        return 'function call'  # Para fins de debug, exibe o valor
+
+class Delete(ASTNode):
+    def __init__(self, nome):
+        super().__init__()
+        self.nome = nome
+    
+    
+    def __repr__(self):
+        return f'Delete({self.nome})'  # Para fins de debug, exibe o valor
+
+class ARRAYS_position(ASTNode):
+    def __init__(self, nome,position):
+        super().__init__()
+        self.nome = nome
+        self.position = position

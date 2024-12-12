@@ -1,0 +1,39 @@
+
+def main(){
+	dyn float: n1 = 0.0
+	dyn float: n2 = 0.0
+	dyn int: opicao = 0
+	while(opicao < 5){
+	mprint("\n[1]Soma\n")
+	mprint("[2]Subtração\n")
+	mprint("[3]Multiplicação\n")
+	mprint("[4]Divisão\n")
+	mprint("[5 >]Sai\n")
+	input(opicao,'opição: ')
+	
+	input(n1,'digite um número: ')
+	input(n2,'digite outro número: ')
+	mprint('\n')
+	if (opicao == 1){
+		dyn float: soma =  n1 +n2
+		mprint(soma)
+		
+	}
+	if (opicao == 2){
+		dyn float: sub =  n1 - n2
+		mprint(sub)
+		
+	}
+	if (opicao == 3){
+		dyn float: mut =  n1 * n2
+		mprint(mut)
+		
+	}
+	if (opicao == 4){
+		dyn float: div =  n1 / n2
+		mprint(div)
+		
+	}
+	}
+}
+

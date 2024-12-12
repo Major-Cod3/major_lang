@@ -1,7 +1,95 @@
 from enum import Enum
-
+#bit a bit
+TOKENS ={
+	#bitwise = {
+	'&':'bitwise_AND',
+	'|':'bitwise_OR',
+	'^':'bitwise_XOR',
+	'~':'bitwise_NOT',
+	'>>':'bitwise_Shift_Right',
+	'<<':'bitwise_Shift_Left',
+	#}
+	#Aritméticos = {
+    '+': 'SOM',
+    '-': 'SUB',
+    '**': 'POW',
+    '*': 'MUT',
+    '/': 'DIV',
+    
+    #}
+    
+    #simbulos = {
+	'=': 'ATTRIBUTION',
+    '[': 'LSQB',
+	']': 'RSQB',
+	'{': 'LBRACE',
+	'}': 'RBRACE',
+	'(': 'LPAREN',
+	')': 'RPAREN',
+	':' : 'COLON',
+	';' : 'SEMICOLON',
+	#}
+	#comparação = {
+    '>': 'MAIOR',
+    '<': 'MENOR',
+    '==': 'ENQUAL',
+    '>=': 'MAIORENQUAL',
+    '<=': 'MENORENQUAL',
+    #}
+    #lógicos = {
+    'or': 'OR',
+    'and': 'AND',
+    'not': 'NOT',
+    #}
+    #tipo = {
+    'int': 'INTEIRO',
+    'i8': 'INT8',
+    'i16': 'INT16',
+    'i32': 'INT32',
+    'i64': 'INT64',
+    'u8': 'UINT8',
+    'u16': 'UINT16',
+    'u32': 'UINT32',
+    'u64': 'UINT64',
+    
+    'float': 'FLOAT',
+    'f32': 'FLOAT32',
+    'f64': 'FLOAT64',
+    'f128': 'FLOAT128',
+    
+    'b8': 'BIN8',
+    'b16': 'BIN16',
+    'b32': 'BIN32',
+    'b64': 'BIN64',
+    
+    'str': 'STRING',
+    'bool': 'BOOLEANO',
+    #}
+    #palavras_chave = {
+    'if': 'IF',
+    'else': 'ELSE',
+    'while': 'WHILE',
+    'true': 'TRUE',
+    'false': 'FALSE',
+    'expand': 'EXPAND',
+    'def': 'DEF',
+    'mprint': 'MPRINT',
+    'input': 'INPUT',
+    'return': 'RETURN',
+    'del': 'DELETE',
+    'dyn':  'DYNAMICS',
+    'let': 'LET',
+    #}
+}
 # Enumeração dos tokens
 Tokens = Enum('Tokens', [
+	#bit a bit
+	'bitwise_AND',
+	'bitwise_OR',
+	'bitwise_XOR',
+	'bitwise_NOT',
+	'bitwise_Shift_Right',
+	'bitwise_Shift_Left',
 	#matematica
     'SOM',     #+
     'SUB',      #-

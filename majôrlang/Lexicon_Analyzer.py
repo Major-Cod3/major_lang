@@ -7,18 +7,20 @@ import compilador_C
 def lexer(code):
 	# Palavras-chave
 	linha = 1
-	regex = re.compile(r'\b(var|if|wehile|true|false|expand|else|return|def|mprint)\b|'
-				   r'\b(int|srt|bool|float)\b|'
+	regex = re.compile(r'\b(del||if|wehile|true|false|expand|else|return|def|mprint|input)\b|'
+		#tipagem
+				   r'\b(int|srt|bool|float|b8)\b|'
 				   r'#(.*?)\n|'
 	# Operadores de comparação
                    r'(>=|<=|==|!=|>|<)|'
+                   r'\*\*|'
 	# Operadores aritméticos e de comparação simples
                    r'[+\-*/^><=;]|'
                    r':|'
 	# Adiciona o símbolo de atribuição           
 	# Números inteiros
 	               r'[0-9]+\.[0-9]+|'
-                   r'[0-9]+|'                    
+                   r'0x[0-9a-fA-F]+|0b[01]+|[0-9]+|'
 	# Identificadores              
                    r'[a-zA-Z_][a-zA-Z0-9_]*|' 
                    r'"[^"]*"|'
@@ -29,16 +31,21 @@ def lexer(code):
 	Tokenizer = []
 	for match in regex.finditer(code):
 		value = match.group(0)
-		## Verifica se o valor está no mapa de tokens, como palavras-chave ou operadores
 		
-		if value in Tokens.token_map:
-			Tokenizer.append((Tokens.token_map[value].name,value,linha))
+		if value in Tokens.TOKENS:
+			Tokenizer.append((Tokens.TOKENS[value],value,linha))
 		elif re.match(r'[0-9]+\.[0-9]+', value):
 			Tokenizer.append((Tokens.Tokens['FLOAT'].name, float(value), linha))
 		#verifica se é um número
-		elif re.match(r'[0-9]+', value):
+		elif re.match(r'[0-9]+|0x[0-9a-fA-F]+|0b[01]+', value):
+			print(value)
+			Tokenizer.append((Tokens.Tokens['INTEIRO'].name, int(value,16),linha))
+		elif re.match(r'0x[0-9a-fA-F]+', value):
+			print(value)
 			Tokenizer.append((Tokens.Tokens['INTEIRO'].name, int(value),linha))
-		
+		elif re.match(r'0b[01]+', value):
+			print(value)
+			Tokenizer.append((Tokens.Tokens['INTEIRO'].name, int(value,2),linha))
 		elif re.match( r'"[^"]*"', value) or re.match( r"'[^']*'", value):
 			Tokenizer.append((Tokens.Tokens['STRING'].name,value.strip('"\''), linha))
 		#Verifica se é um identificador
@@ -51,19 +58,19 @@ def lexer(code):
 		elif re.match(r'\n', value):
 			linha += 1
 		else:
-			print('ERRO:Token INVALIDO',value)
+			if len(value) > 0:
+				print('ERRO:Token INVALIDO',value,'linha:',linha)
 	return Tokenizer
 		
 
 
 if __name__ == "__main__":
-	with open("/storage/emulated/0/major/python/linguagem major/test/main.tst", 'r') as arquivo:
+	with open("/storage/emulated/0/major/python/linguagem_major/majôrlang/test/bit_array.mj", 'r') as arquivo:
 		arquivo_e_linhas = arquivo.read()
 	lexe = lexer(arquivo_e_linhas)
-	
+	#for i in lexe:
+#		print(i)
 	paser = Parser.Parser(lexe).parser()
-	Interpreter = compilador_C.compilador()
-	t = len(paser)
+	Interpreter = compilador_C.compilador(len(paser))
 	for i in paser:
-		Interpreter.interpret(i,t)
-		t -=1
+		Interpreter.interpret(i)

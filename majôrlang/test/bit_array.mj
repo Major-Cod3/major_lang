@@ -1,0 +1,8 @@
+def main(){
+	dyn b8: b = 0xf
+	dyn int: i = 0
+	while(i<9){
+	mprint(b[i])
+	i = i+1
+	}
+}
