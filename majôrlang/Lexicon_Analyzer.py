@@ -9,7 +9,8 @@ def lexer(code):
 	linha = 1
 	regex = re.compile(r'\b(del||if|wehile|true|false|expand|else|return|def|mprint|input)\b|'
 		#tipagem
-				   r'\b(int|srt|bool|float|b8)\b|'
+				   r'\b(int|i8||srt|bool|float|b8)\b|'
+				   r'\b(i8|i16|i32|i64)\b|'
 				   r'#(.*?)\n|'
 	# Operadores de comparação
                    r'(>=|<=|==|!=|>|<)|'
@@ -38,13 +39,13 @@ def lexer(code):
 			Tokenizer.append((Tokens.Tokens['FLOAT'].name, float(value), linha))
 		#verifica se é um número
 		elif re.match(r'[0-9]+|0x[0-9a-fA-F]+|0b[01]+', value):
-			print(value)
+			
 			Tokenizer.append((Tokens.Tokens['INTEIRO'].name, int(value,16),linha))
 		elif re.match(r'0x[0-9a-fA-F]+', value):
 			print(value)
 			Tokenizer.append((Tokens.Tokens['INTEIRO'].name, int(value),linha))
 		elif re.match(r'0b[01]+', value):
-			print(value)
+			
 			Tokenizer.append((Tokens.Tokens['INTEIRO'].name, int(value,2),linha))
 		elif re.match( r'"[^"]*"', value) or re.match( r"'[^']*'", value):
 			Tokenizer.append((Tokens.Tokens['STRING'].name,value.strip('"\''), linha))
@@ -65,10 +66,10 @@ def lexer(code):
 
 
 if __name__ == "__main__":
-	with open("/storage/emulated/0/major/python/linguagem_major/majôrlang/test/bit_array.mj", 'r') as arquivo:
+	with open("/storage/emulated/0/major/python/linguagem_major/majôrlang/test/main.tst", 'r') as arquivo:
 		arquivo_e_linhas = arquivo.read()
 	lexe = lexer(arquivo_e_linhas)
-	#for i in lexe:
+#	for i in lexe:
 #		print(i)
 	paser = Parser.Parser(lexe).parser()
 	Interpreter = compilador_C.compilador(len(paser))

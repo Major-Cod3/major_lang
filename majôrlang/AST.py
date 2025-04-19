@@ -7,6 +7,7 @@ class VarAssign(ASTNode):
 	       self.tipo = tipo
 	       self.identifier = identifier
 	       self.value = value
+	       
 		
 class IFStatement(ASTNode):
 	def __init__(self,condition, body,else_body=None):

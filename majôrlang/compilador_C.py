@@ -10,15 +10,27 @@ class compilador:
 		self._final = final
 		del script
 		self.variables = {}
+		self.boffer = 0
 		self.main = open('main.cpp','w')
 	def node_data(self, node):
+		
+		
 		backup_variables = list(self.variables.keys())
+		
+		
+			
 		for no in node:
+
 			self.interpret(no)
+		
 		for i in list(self.variables.keys()):
 			if not i in backup_variables:
 				self.linha.append(f'free({i[1:]});')
+				
 				del self.variables[i]
+		
+		
+
 	def interpret(self, node):
 		if isinstance(node, VarAssign):
 			self.visit_var_assign(node)
@@ -58,16 +70,31 @@ class compilador:
 			sys.exit()
 	def visit_var_assign(self,node):
 	       self.variables['*'+node.identifier] = (node.tipo, self.interpret(node.value))
+	       
 	       match node.tipo:
-	       	case 'INTEIRO':
-	       		self.linha.append(f"int *{node.identifier} =  (int*) malloc(sizeof(int)); *{node.identifier} = {self.interpret(node.value)};")
+	       	case 'INT8':
+	       		self.linha.append(f"int *{node.identifier} =  (int*) malloc(1); *{node.identifier} = {self.interpret(node.value)};")
+	       		self.boffer += 1
+	       	case 'INT16':
+	       		self.linha.append(f"int *{node.identifier} =  (int*) malloc(2); *{node.identifier} = {self.interpret(node.value)};")
+	       		self.boffer += 2
+	       	case 'INT32':
+	       		self.linha.append(f"int *{node.identifier} =  (int*) malloc(4); *{node.identifier} = {self.interpret(node.value)};")
+	       		self.boffer += 4
+	       	case 'INT64':
+	       		self.linha.append(f"int *{node.identifier} =  (int*) malloc(8); *{node.identifier} = {self.interpret(node.value)};")
+	       		self.boffer += 8
 	       	case 'FLOAT':
-	       		self.linha.append(f"float *{node.identifier} =  (float*) malloc(sizeof(float)); *{node.identifier} = {self.interpret(node.value)};")
+	       		self.linha.append(f"float *{node.identifier} =  (float*) malloc(8); *{node.identifier} = {self.interpret(node.value)};")
+	       		self.boffer += 8
 	       	case 'BIN8':
-	       		self.linha.append(f'char *{node.identifier} =  (char*) malloc(8); *{node.identifier} = {self.interpret(node.value)};')
+	       		self.linha.append(f'char *{node.identifier} =  (char*) malloc(1); *{node.identifier} = {self.interpret(node.value)};')
+	       		self.boffer += 1
 	       	case 'STRING':
 	       		tamanho = len(self.interpret(node.value))
 	       		self.linha.append(f'char *{node.identifier} =  (char*) malloc(sizeof(char)*{tamanho});')
+	       		self.boffer += tamanho
+	       		
 	       		self.linha.append(f'snprintf({node.identifier}, {tamanho}, "{self.interpret(node.value)}");')
 	       	case None:
 	       		self.linha.append(f' *{node.identifier} = {self.interpret(node.value)};')
@@ -99,7 +126,16 @@ class compilador:
 		self._final -= 1
 	def visit_def_assign(self,node):
 		self.linha.append(f"int {node.name}()"+'{')
+		numer_ = len(self.linha)
+		
+			
+			
 		self.node_data(node.body)
+		if self.boffer > 0:
+			self.linha.insert(numer_ , f'void *boffer =  malloc({self.boffer});')
+			
+			self.boffer = 0
+			self.linha.append(f'free(boffer);')
 		self.linha.append('}')
 		self._final -= 1
 	def visit_Mprint_assign(self,node):
@@ -111,9 +147,8 @@ class compilador:
 		  	valor = f'"{self.interpret(i)}"'
 		  elif isinstance(i, IDENTIFIER):
 		  	tipo = self.variables[self.interpret(i)][0]
-		  	print(tipo)
 		  	match tipo:
-		  		case 'INTEIRO' | 'BIN8':
+		  		case 'INT8' | 'BIN8' | 'INT16' | 'INT32' | 'INT64':
 		  			valor = f'"%d",{self.interpret(i)}'
 		  		case 'FLOAT':
 		  			valor = f'"%f",{self.interpret(i)}'
@@ -127,6 +162,7 @@ class compilador:
 	def visit_Input_assign(self,node):
 		self.linha.append(f'printf("{node.text}");')
 		valor = ""
+		
 		tipo = self.variables['*'+node.var][1]
 		if isinstance(tipo, float):
 		  	valor = "%f"

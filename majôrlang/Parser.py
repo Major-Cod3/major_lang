@@ -44,11 +44,14 @@ class Parser():
 		#  variavel
 		modelo = self.previous()
 		tipor = self.tokens[self.Index]
+		
 		self.Index +=1
 		self.consume('COLON')
 		identifier = self.consume('IDENTIFIER')[1]
 		self.consume('ATTRIBUTION')
+		
 		value = self.expression()
+		
 		if self.check_type(tipor[0],value):
 			return VarAssign(identifier,value,tipor[0])
 		else:
@@ -150,7 +153,9 @@ class Parser():
 			return current_token
 		self.erro(f'SyntaxError: Unexpected token {token_type}, na linha:{self.linha}')
 	def expression(self):
+		
 		left = self.primary_expression()
+		
 		while True:
 			if self.match('MAIOR'):
 				operator = '>'
@@ -176,10 +181,12 @@ class Parser():
 				break
 			right = self.primary_expression()  # Captura a próxima expressão à direita
 			left = BinaryOperation(left, operator, right)  # Combina as duas expressões
+			
 		return left
 			
 	def primary_expression(self):
 		if self.match('INTEIRO'):
+				
 				return Number(int(self.previous()[1]))
 		elif self.match('FLOAT'):
 			return Number(float(self.previous()[1]))
@@ -201,10 +208,11 @@ class Parser():
 		return False
 	def check_type(self, expected_type, value):
 		if isinstance(value, Number):
-			if expected_type == 'INTEIRO' and value.is_integer() or expected_type == 'BIN8':
-				return True
-			elif expected_type == 'FLOAT' and value.is_float():
-				return True
+			for i in ('INT8','INT16','INT32','INT64','BIN8'):
+				if expected_type == i and value.is_integer() or expected_type == i:
+					return True
+				elif expected_type == 'FLOAT' and value.is_float():
+					return True
 		elif isinstance(value, BinaryOperation):
 		      left_type = self.check_type(expected_type, value.left)
 		      right_type = self.check_type(expected_type, value.right)
@@ -217,6 +225,7 @@ class Parser():
 		return False
 		
 	def check(self,token_type):
+		
 		return self.Index < len(self.tokens) and self.tokens[self.Index][0] == token_type
 	
 	def previous(self):
