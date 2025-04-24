@@ -32,9 +32,9 @@ TOKENS ={
 	#comparação = {
     '>': 'MAIOR',
     '<': 'MENOR',
-    '==': 'ENQUAL',
-    '>=': 'MAIORENQUAL',
-    '<=': 'MENORENQUAL',
+    '==': 'IQUAL',
+    '>=': 'MAIORIQUAL',
+    '<=': 'MENORIQUAL',
     #}
     #lógicos = {
     'or': 'OR',
@@ -99,9 +99,9 @@ Tokens = Enum('Tokens', [
     #comparador
     'MAIOR', 	#>
     'MENOR',	 #<
-    'ENQUAL', 	#==
-    'MAIORENQUAL', 	#>=
-    'MENORENQUAL',	#<=
+    'IQUAL', 	#==
+    'MAIORIQUAL', 	#>=
+    'MENORIQUAL',	#<=
     #Símbolos
     'LSQB',	#[
     'RSQB',	# ]
@@ -145,9 +145,9 @@ token_map = {
     '^': Tokens.POW,
     '>': Tokens.MAIOR,
     '<': Tokens.MENOR,
-    '==': Tokens.ENQUAL,
-    '>=': Tokens.MAIORENQUAL,
-    '<=': Tokens.MENORENQUAL,
+    '==': Tokens.IQUAL,
+    '>=': Tokens.MAIORIQUAL,
+    '<=': Tokens.MENORIQUAL,
     '=': Tokens.ATTRIBUTION,
     '[': Tokens.LSQB,
 	']': Tokens.RSQB,

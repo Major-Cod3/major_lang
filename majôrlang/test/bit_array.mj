@@ -1,8 +1,8 @@
 def main(){
-	dyn b8: b = 0xf
-	dyn int: i = 0
-	while(i<9){
+	let b8: b = 0xf
+	let i8: i = 7
+	while(i>=0){
 	mprint(b[i])
-	i = i+1
+	i = i-1
 	}
 }

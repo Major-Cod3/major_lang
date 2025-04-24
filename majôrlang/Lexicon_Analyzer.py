@@ -66,7 +66,7 @@ def lexer(code):
 
 
 if __name__ == "__main__":
-	with open("/storage/emulated/0/major/python/linguagem_major/majôrlang/test/main.tst", 'r') as arquivo:
+	with open("test/bit_array.mj", 'r') as arquivo:
 		arquivo_e_linhas = arquivo.read()
 	lexe = lexer(arquivo_e_linhas)
 #	for i in lexe:
